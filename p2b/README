@@ -1,0 +1,29 @@
+1) Paul Gerlich -- 612500889
+
+2a) SmartHero:
+		SmartHero begins by making arrays with information about eatibles/powerups/enemies. We store the locations of all eatibles (x/y/vertex) as well as whether or not they are on the map, and if they can reach all other eatibles (as well as how many other powerups/eatibles they can reach)
+		
+		After all of this has been assessed, the smarthero will proceed to move to the nearest eatible/powerup that can reach all other items. It will do this until all powerups/eatibles have been assessed. If we find a powerup, we will quickly locate all other powerups/eatibles just to ensure that this powerup wasn't able to reach everything before, and has moved into a secluded area.
+		
+		All the while, the smarthero has an enemy avoidance strategy programmed into the method that grabs a target and develops the path. Essentially, if within the next 2 moves on our path -- there is an enemy on, or directly adjacent too, our path -- we will not use that path. This works 90% of the time, but it does not account for enemies moving into our path in weird ways. So we have a redundant check in our chooseMove method. This essentially does a final check to make sure we are not moving on, or directly next to, an enemy. If we are, we will move to a spot either a) without an enemy next to/on it or b) in the opposite direction of the enemy.
+
+2b) SmartPowerup:
+		The smart powerup is literally taken straight out of the code for my smart hero. Essentially, I deleted everything about keeping track of how many things something can reach, deleted all eatible information, and then replaced everthing for powerups with the smart hero with enemies, and everything with the enemies with heros. So the basic strategy is this: Follow enemies while avoiding heros at all cost. Unless trapped, a powerup will NEVER step directly on a hero, but my sometimes step directly next to one. In addition, while following (and usually staying directly on top of) an enemy, we will not continue this behavior if we come within 1/10 of the map + 1 distance to a hero. In this case, we will begin running away from the hero (normally we just end up staying on/following the enemy).
+
+2c) SmartEnemy:
+		Smart enemy is also a direct re-implementation of the smarthero. Essentially we don't care about powerups, but we keep track of heros and eatibles. The basic strategy is to try and eat the heros, but there are a few twists on there that make it so that the enemies don't just stack up and chase the same guy all of the map. When the enemy is first made, it checks it's location in the actor array % 4. This is stored as "Direction" as per a previous strategy I attempted, and was too lazy to change the name of the variable. Essentially, if the % 4 = 1, we just find the nearest eatible and sit there. Otherwise, there are basically two options. We will take the first, or second shortest path to the enemy based on our direction that was assigned. This almost always ensures that the enemy doesn't stack and will generally follow the nearest hero with a different path than the other enemies (more or less).
+
+3) There wasn't much that I remember being too ambiguous. Some of the biggest obstacles / ambiguities I had to deal with were in how the graphmap worked (figuring out what each method did) -- and how the choose move worked and such. Once I understood how each function worked/was supposed to work it was all implementation from there.
+
+4)
+	smarthero.cpp : This is the full implementation of the smarthero and the strategies explained before in (2).
+	
+	smarthero.hpp : This is the header file containing all of the prototype methods for smarthero.
+	
+	smartpowerup.cpp : This is the full implementation of the smartpowerup and the strategies explained before in (2).
+	
+	smartpowerup.hpp : This is the header file containing all of the prototype methods for smartpowerup.
+	
+	smartenemy.cpp : This is the full implementation of the smartenemy and the strategies explained in (2)
+	
+	smartenemy.hpp : This is the header file containing all of the prototype methods for smartpowerup.

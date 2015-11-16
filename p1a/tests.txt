@@ -1,0 +1,290 @@
+
+compare : compare.c
+	gcc -ansi -g -o compare compare.c
+
+grade : compare gradecrop gradebw gradecolorshift gradeoverlay
+
+gradebw : gradebw0 gradebw1 gradebw2 gradebw3 gradebw4 gradebw5
+
+gradebw0: bw
+	@echo BW grade 00: Standard Example
+	-./bw  attached.simp bw_attached.simp 
+	-./compare bw_attached.simp gradebw0.simp
+	@echo 5 points for 0 bytes different ONLY!
+	@echo
+	@echo
+
+gradebw1: bw
+	@echo BW grade 01: Doge Example
+	@echo 10 points possible.
+	-./bw doge.simp bw_doge.simp 
+	@echo +2 for same file size, +8 for correctness
+	-./compare bw_doge.simp gradebw1.simp 8 2
+	@echo
+	@echo
+
+gradebw2: bw
+	@echo BW grade 02: Confession Example
+	@echo 10 points possible.
+	-./bw confession.simp bw_confess.simp 
+	@echo +2 for same file size, +8 for correctness
+	-./compare bw_confess.simp gradebw2.simp 8 2
+	@echo
+	@echo
+
+gradebw3: bw
+	@echo BW grade 03:
+	@echo 10 points possible.
+	-./bw keanu.simp keanu_bw.simp
+	@echo +2 for same file size, +8 for correctness
+	-./compare keanu_bw.simp gradebw3.simp 8 2
+	@echo
+	@echo
+
+gradebw4: bw
+	@echo BW grade 04: No Arguments
+	@echo 5 points for 0 bytes different ONLY.
+	-./bw 
+	@echo
+	@echo
+
+gradebw5: bw
+	@echo BW grade 05: File Does Not Exist
+	@echo 5 points for no failure
+	-./bw THISFILEDOESNOTEXIST.txt out.simp
+	@echo
+	@echo
+
+gradebw6: bw
+	@echo BW grade 06: Corrupted SIMP file
+	@echo 5 points for no failure
+	-./bw corrupt.simp bw_corrupt.simp
+	@echo
+	@echo
+
+gradecolorshift : gradecolor0 gradecolor1 gradecolor2 gradecolor3 gradecolor4 gradecolor5
+
+gradecolor0: colorshift
+	@echo COLORSHIFT grade 00: Standard Example
+	@echo 10 points for 0 bytes different ONLY.
+	-./colorshift keanu.simp keanurgb.simp RGB 
+	-./compare keanurgb.simp gradecolor0a.simp 2
+	@echo
+	-./colorshift keanu.simp keanurbg.simp RBG 
+	-./compare keanurbg.simp gradecolor0b.simp 2
+	@echo
+	-./colorshift keanu.simp keanurg.simp RG 
+	-./compare keanurg.simp gradecolor0c.simp 2
+	@echo
+	-./colorshift keanu.simp keanurb.simp RB 
+	-./compare keanurb.simp gradecolor0d.simp 2
+	@echo
+	-./colorshift keanu.simp keanugb.simp GB 
+	-./compare keanugb.simp gradecolor0e.simp 2
+	@echo 10 points for 0 bytes different ONLY.
+	@echo
+	@echo
+	
+gradecolor1: colorshift
+	@echo COLORSHIFT grade 01: Alternate Patterns
+	@echo 10 points for 0 bytes different ONLY.
+	-./colorshift doge.simp doge_gbr.simp GBR 
+	-./compare doge_gbr.simp gradecolor1a.simp 2
+	@echo
+	-./colorshift doge.simp doge_bgr.simp BGR 
+	-./compare doge_bgr.simp gradecolor1b.simp 2
+	@echo
+	-./colorshift doge.simp doge_gr.simp GR 
+	-./compare doge_gr.simp gradecolor1c.simp 2
+	@echo
+	-./colorshift doge.simp doge_br.simp BR 
+	-./compare doge_br.simp gradecolor1d.simp 2
+	@echo
+	-./colorshift doge.simp doge_bg.simp BG 
+	-./compare doge_bg.simp gradecolor1e.simp 2
+	@echo
+	@echo
+	
+	
+	
+gradecolor2: colorshift
+	@echo COLORSHIFT grade 02: Alternate Patterns, Big
+	@echo 10 points for 0 bytes different ONLY.
+	-./colorshift confession.simp confession_brg.simp BRG 
+	-./compare confession_brg.simp gradecolor2a.simp 4 1
+	@echo
+	-./colorshift confession.simp confession_grb.simp GRB 
+	-./compare confession_grb.simp gradecolor2b.simp 4 1
+	@echo
+	@echo
+	
+	
+gradecolor3: colorshift
+	@echo COLORSHIFT grade 03: No arguments
+	@echo 5 points for no failure.
+	-./colorshift 
+	@echo
+	@echo
+	
+gradecolor4: colorshift
+	@echo COLORSHIFT grade 04: Invalid pattern
+	@echo 5 points for no failure.
+	-./colorshift doge.simp doge_nothing.simp RFB
+	@echo
+	@echo
+	
+gradecolor5: colorshift
+	@echo COLORSHIFT grade 05: No incoming file
+	@echo 5 points for no failure.
+	-./colorshift  THISFILEDOESNOTEXIST.txt out.txt RGB
+	@echo
+	@echo
+	
+gradecolor6: colorshift
+	@echo COLORSHIFT grade 06: Invalid write permissions
+	@echo 5 points for no failure.
+	-touch out.simp
+	-chmod a-w out.simp
+	-./colorshift doge.simp out.simp RGB
+	-rm out.simp
+	@echo
+	@echo
+
+gradecrop : gradecrop0 gradecrop1 gradecrop2 gradecrop3 gradecrop4 gradecrop5 gradecrop6 gradecrop7  
+
+gradecrop0: crop
+	@echo Crop grade 00: Standard Example
+	@echo 5 points for 0 bytes different ONLY.
+	-./crop insanity.simp c_insanity.simp 150 112 220 290  
+	@echo 5 points for 0 bytes different ONLY.
+	-./compare c_insanity.simp gradecrop0.simp
+	@echo 5 points for 0 bytes different ONLY.
+	@echo
+	@echo
+	
+gradecrop1: crop
+	@echo Crop grade 01: 1-by-1
+	@echo 10 points
+	-./crop attached.simp attached_one.simp 100 300 1 1
+	@echo +2 for same file size, +8 for correctness
+	-./compare  attached_one.simp gradecrop1.simp 8 2
+	@echo
+	@echo
+	
+gradecrop2: crop
+	@echo Crop grade 02: BIG
+	@echo 10 points
+	-./crop confession.simp confess_crop.simp 600 400 100 100
+	@echo +2 for same file size, +8 for correctness
+	-./compare confess_crop.simp gradecrop2.simp 8 2
+	@echo
+	@echo
+	
+gradecrop3: crop
+	@echo Crop grade 03: Tall
+	@echo 10 points
+	-./crop keanu.simp keanu_skinny.simp 100 0 5 300  
+	@echo +2 for same file size, +8 for correctness
+	-./compare keanu_skinny.simp gradecrop3.simp 8 2
+	@echo
+	@echo
+	
+	
+gradecrop4: crop
+	@echo Crop grade 04: No arguments
+	@echo 3 points for stopping with no failure. 
+	-./crop
+	@echo
+	@echo
+	 
+gradecrop5: crop
+	@echo Crop grade 05: Zero-valued arguments
+	@echo 4 points for stopping with no failure. 
+	-./crop insanity.simp c_insanity.simp 0 0 0 0 
+	@echo
+	@echo
+	
+gradecrop6: crop
+	@echo Crop grade 06: Bigger crop than original
+	@echo 4 points for stopping with no failure. 
+	-./crop insanity.simp big_insanity.simp 0 0 1000 1000
+	@echo +1 point for 0 bytes different:
+	-./compare big_insanity.simp gradecrop6.simp 1
+	@echo
+	@echo
+	
+gradecrop7: crop
+	@echo Crop grade 07:  Negative x,y 
+	@echo 4 points for stopping with no failure. 
+	-./crop insanity.simp upper_insanity.simp -10 -20 70 200
+	@echo +1 point for 0 bytes different:
+	-./compare upper_insanity.simp gradecrop7.simp 1
+	@echo
+	@echo
+	
+	
+
+
+gradeoverlay: gradeoverlay0 gradeoverlay1 gradeoverlay2 gradeoverlay3 gradeoverlay4 gradeoverlay5 gradeoverlay6 
+	
+gradeoverlay0: overlay
+	@echo overlay grade 00: Standard example 
+	@echo 5 points for 0 bytes different ONLY!
+	-./overlay  insanity.simp doge.simp insanedoge.simp 150 120 
+	@echo 5 points for 0 bytes different ONLY!
+	-./compare insanedoge.simp gradeoverlay0.simp 4 1
+	@echo
+	@echo
+	
+gradeoverlay1: overlay
+	@echo overlay grade 01: Attached Insane
+	@echo 10 points possible
+	-./overlay insanity.simp attached_head.simp insaneattached.simp 110 110
+	@echo 2 points for same filesize, 8 points for agreement:
+	-./compare insaneattached.simp gradeoverlay1.simp 8 2
+	@echo
+	@echo
+	
+gradeoverlay2: overlay
+	@echo overlay grade 02: Attached Confession Big
+	@echo 10 points possible
+	-./overlay confession.simp attached_head.simp attachconfess.simp 400 150
+	@echo 2 points for same filesize, 8 points for agreement:
+	-./compare attachconfess.simp gradeoverlay2.simp 8 2
+	@echo
+	@echo
+	
+gradeoverlay3: overlay
+	@echo overlay grade 03: Doge Attached
+	@echo 10 points possible.
+	-./overlay attached.simp doge.simp dogeattach.simp 240 100
+	@echo 2 points for  same filesize, 8 points for agreement:
+	-./compare dogeattach.simp gradeoverlay3.simp 8 2
+	@echo
+	@echo
+	
+gradeoverlay4: overlay
+	@echo overlay grade 04: No arguments
+	@echo 5 points for stopping with no failure. 
+	-./overlay
+	@echo
+	@echo
+	 
+gradeoverlay5: overlay
+	@echo overlay grade 05: Negative x,y 
+	@echo 5 points for stopping with no failure. 
+	-./overlay  keanu.simp attached_head.simp attachkeanu.simp 25 -125
+	@echo +1 point for 0 bytes different:
+	-./compare attachkeanu.simp gradeoverlay5.simp 1
+	@echo
+	@echo
+	
+gradeoverlay6: overlay	
+	@echo overlay grade 06: Bigger overlay than original
+	@echo 5 points for stopping with no failure. 
+	-./overlay  keanu.simp confession.simp keanuconfess.simp 4 10 100
+	@echo +1 point for 0 bytes different:
+	-./compare keanuconfess.simp gradeoverlay6.simp 1
+	@echo
+	@echo
+	

@@ -1,0 +1,22 @@
+Project 1 README:
+
+By: Paul Gerlich - 612500889
+
+In this project I have utilized two structs to store all of the data associated with a SIMP image.
+
+Struct image: This struct contains the Height, Width, Total Pixels, and a struct pointer to an array of pixel structs.
+
+Struct pixel: This struct contains the Red, Green, Blue, and Alpha channels of a pixel. Each image struct contains a pointer to an array of these structs, used to store every single pixel in a one dimensional array. 
+
+I decided to use a one dimensional array in this project because it is relatively simple to iterate through the array using simple incremented variables and nested for loops. You can see this exemplified in my code. One difficult and ultimately sloppy task I had to take on in this project was that of the colorshift program. I could not come up with a better method of performing the shift than with nested switch statements. I considered doing nested ifs, but I figured this code would be much cleaner and more simple to read.
+
+Crop.c: This contains a main method that parses through and opens the files, sets required variables, and can display a help screen specific to this program. It also contains the specified crop function used to crop fies.
+
+bw.c: This source file contains the specific method used for converting an image to black and white, as well the simple opening of files and making other function calls where necessary. This file also contains a help function specific to this program.
+
+colorshift.c: This source file contains the colorshift method used to switching the RGB values as well as the main method used for opening and calling necssary functions to process images. There is also a specified help function for this program.
+
+olverlay.c: This source file contains the specified method for overlaying one image over another. It also contains a main method for opening and calling associated functions for loading the images. Finally, there is a specified help method for this program.
+
+lap.h: This file is the conjoined file that I have added and treated somewhat like a library. This file contains the methods for loading and exporting images. In addition, for PART B, I will be transferring over the Crop and overlay functions to this  library header file to be called from the meme program.
+

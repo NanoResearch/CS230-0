@@ -1,0 +1,30 @@
+Project 1 part 2 README:
+
+By: Paul Gerlich - 612500889
+
+In this project, I have created quite a few sructs to help store and manage all of the data that is associated with our meme program. I will explain each struct briefly below.
+
+Struct image: This struct contains the Height, Width, Total Pixels, and a struct pointer to an array of pixel structs.
+
+Struct pixel: This struct contains the Red, Green, Blue, and Alpha channels of a pixel. Each image struct contains a pointer to an array of these structs, used to store every single pixel in a one dimensional array.  
+
+struct act: This struct contains the output file that we will eventually push our meme too, the name of our font, the name of our meme, and a struct pointer to multiple strucks that contain information about the text-id's to be posted to the meme. We also have an integer for keeping track of the number of text id's we are using.
+
+struct meme: This struct contains the input image file and the associate image struct that we use to store all of the pixel data in.
+
+struct TextID: This struct contains the name, string value, and center x/y coordinates for each text-ID found in the action file.
+
+struct character; This struct contains an image struct with all of the pixel data for each individual character, as well as the X/Y coordinates of its top left corner in the front image file, and the width and height of the image stored as integer values.
+
+struct font: This struct contains two input files, one for the font information (.fsf file) and then another one for the input image with all the character values. This also contains the associated image struct for the input image, as well as an integer that keeps track of how many characters this font has. In addition, there is a pointer to a character struct that stores each individual character.
+
+On top of the project implementation ideas discussed in the previous readme (just detailing the usage of a 1D array for storing pixel data) -- I have implemented quite a few interdependent data structures with the intention of creating a smooth and effective I/O flow. Fortunately, there was no one task that was particularly more dificult than another, however, I would say the most difficult surface level task was that of ensuring that this program contained no memory leaks and was able to read in file information in randomized and not position-dependant orders. I implemented a new header file and program file in this program to hold all of the associated methods for processing each file type. In the project specification it is almost directly said that you must go through and open all of the font files and load each memes information, but I noticed that this was entirely un-necessary. As such, I only lead the action file first -- grabbing all of the information necessary -- and then just reference the meme file to ensure each entity in the action file matches the meme file, and then process only the necessary information. I saw that part of the specification as misleading or entirely erroneous (not to mention extremely inefficient)
+
+process.c: This is our MAIN program source code. This file contains methods for loading and processing each kind of input file, as well as a number of helper methods used to grab strings, grab x/y/w/h values, overlay the character images, load and process character structs, and really every fine detail of this program. This also contains slightly modified version of the crop and overlay methods that were implemented in project 1. The major difference is the implementation of overlay being modified to account for memory links, as it is called repeatedly and used to have a malloc in each function call.
+
+process.h: This is the associated header file for the process.c file. This contains nothing but function prototypes and struct implementations.
+
+meme.c: This program contains a help method for our program, as well as the general function calls to all of the methods that are established in process.c. This program opens all the necessary input files, and then passes our structs that we created to our methods by reference to be processed and filled with the necessary information.
+
+lap.h: This file is the conjoined file that I have added and treated somewhat like a library. This file contains the methods for loading and exporting images. In addition, for PART B, I will be transferring over the Crop and overlay functions to this  library header file to be called from the meme program.
+

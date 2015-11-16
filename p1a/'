@@ -1,0 +1,135 @@
+/* Overlay.c: This program takes in two pictures and overlays the second image
+ * over the first image with the top left of the second image being at
+ * the position X,Y
+ * By: Paul Gerlich
+ */
+
+
+#include<stdio.h>
+#include<stdlib.h>
+#include "lap.h"
+
+void help()
+{
+system("clear");
+printf("----------------------------------------------\n");
+printf("---------------Having troubles?---------------\n");
+printf("---------Here's how to work the program!------\n");
+printf("./overlay input1.smp input2.smp output.smp x y\n");
+printf("--- input1: Input image for the background ---\n");
+printf("------- input2: Input image to be on top -----\n");
+printf("------- output: output image destination -----\n");
+printf("------- X: x to mark top left of overlay -----\n");
+printf("------- Y: y to mark top left of overlay -----\n");
+printf("----------------------------------------------\n");
+printf("--------------- Have fun! --------------------\n");
+}
+
+
+struct image overlayImages(struct image bottom, struct image top, int x, int y)
+{
+	struct image out;
+	int i, j, thisPixel = 0, k = 0;
+
+	out.width = bottom.width;
+	out.height = bottom.height;
+	out.totalPixels = out.width * out.height;
+	
+	out.pixels = (struct pixel*) malloc(sizeof(struct pixel) * out.totalPixels);
+
+
+	/* Iterate through all the pixels and keep which ones we want! */
+	for ( i = 0; i < bottom.height; i++ ) {
+		for ( j = 0; j < bottom.width; j++) {
+			if ( (j >= x && j < (x + top.width) ) && ( i >= y && i < ( y + top.height ) ) ) {
+					printf("X: %d Y: %x\n",j, i);
+					out.pixels[thisPixel].r = ( ( ( top.pixels[k].a ) / 255 ) * top.pixels[k].r ) + ( ( ( bottom.pixels[thisPixel].a * ( 255 - top.pixels[k].a ) ) / ( 255 * 255 ) ) * bottom.pixels[thisPixel].r );
+					out.pixels[thisPixel].g = ( ( ( top.pixels[k].a ) / 255 ) * top.pixels[k].g ) + ( ( ( bottom.pixels[thisPixel].a * ( 255 - top.pixels[k].a ) ) / ( 255 * 255 ) ) * bottom.pixels[thisPixel].g );
+					out.pixels[thisPixel].b = ( ( ( top.pixels[k].a ) / 255 ) * top.pixels[k].b ) + ( ( ( bottom.pixels[thisPixel].a * ( 255 - top.pixels[k].a ) ) / ( 255 * 255 ) ) * bottom.pixels[thisPixel].b );
+					out.pixels[thisPixel].a = ( 255 * ( ( top.pixels[k].a / 255 ) + ( ( bottom.pixels[thisPixel].a * (255 - top.pixels[k].a) ) / (255 * 255) ) ) );
+					k++; 
+			} else {
+					out.pixels[thisPixel].r = bottom.pixels[thisPixel].r;
+					out.pixels[thisPixel].g = bottom.pixels[thisPixel].g;
+					out.pixels[thisPixel].b = bottom.pixels[thisPixel].b;
+					out.pixels[thisPixel].a = bottom.pixels[thisPixel].a;
+			}
+			thisPixel++;
+		}
+	}	
+
+	return out;
+}
+
+
+int main(int argc, char** argv)
+{
+	int x, y;
+	FILE* infileBottom;
+	FILE* infileTop;
+	FILE* outfile;
+	struct image backImage, frontImage, outputImage;
+
+
+	if ( argc == 1 ){
+		help();
+		exit(1);
+	}
+
+	if ( argc < 6 ){
+		printf("You are missing relevant arguments!\n");
+		exit(1);	
+	} else if ( argc > 6 ){
+		printf("You have too many arguments!\n");
+		exit(1);
+	}
+
+	infileBottom = fopen(argv[1],"r");
+	if ( !infileBottom ){
+		printf("Unable to open the input file at %s\n",argv[1]);
+		exit(1);
+	}
+
+	infileTop = fopen(argv[2], "r");
+	if ( !infileTop ){
+		printf("Unable to open the input file at %s\n",argv[3]);
+		exit(1);
+	}
+
+
+	outfile = fopen(argv[3],"w");
+	if ( !outfile ){
+		printf("Unable to open the output at %s\n",argv[3]);
+		printf("Perhaps it is already open, or you do not have permissions?\n");
+		exit(1);
+	}
+
+	x = atoi(argv[4]);
+	y = atoi(argv[5]);
+
+	/* Process the two images */
+	backImage = process(infileBottom);
+	frontImage = process(infileTop);
+
+	/* Throw an error after it's processed if it's just not going to work! */
+	if (x > backImage.width){
+		printf("You have specified an X that was too large to fit on the background image!\n");
+		exit(1);
+	} else if (y > backImage.height){
+		printf("You have specified a Y that was too large to fit on the background image!\n");
+		exit(1);
+	}
+
+	/* Overlay the two images */
+	outputImage = overlayImages(backImage, frontImage, x, y);
+
+	/* Export the image to SMP */
+	export(outputImage, outfile);
+
+	/* FIXME Congratulatory message for your successes */
+	printf("Congratulations, all is well and you're not retarded\n");
+
+	/* FIXME You have to free every pixel struct and the image struct */
+
+	return 0;
+}
